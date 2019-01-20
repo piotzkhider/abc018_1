@@ -3,6 +3,13 @@
     "phpunit/phpunit": "^7.5"
   },
   "autoload": {
-    "Acme\\": "src/"
+    "psr-4": {
+      "Acme\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
   }
 }

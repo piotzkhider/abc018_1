@@ -1,14 +1,18 @@
 <?php
 
+require_once 'vendor/autoload.php';
+
 use Acme\DescendingComparator;
 use Acme\Ranking;
 use Acme\Score;
+use Acme\Scores;
 
-$input = file('php://stdin', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+$inputs = file('php://stdin', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
 
-$scores = array_map(function ($score) {
-    return new Score($score);
-}, $input);
+$scores = new Scores();
+foreach ($inputs as $input) {
+    $scores->add(new Score($input));
+}
 
 $ranking = new Ranking($scores, new DescendingComparator());
 

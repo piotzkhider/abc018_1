@@ -7,7 +7,7 @@ use UnexpectedValueException;
 class Ranking
 {
     /**
-     * @var array|Score[]
+     * @var Scores
      */
     private $scores;
 
@@ -17,33 +17,29 @@ class Ranking
     private $comparator;
 
     /**
-     * @var array|Score[]
+     * @var Scores
      */
     private $ranked;
 
     /**
      * Ranking constructor.
      *
-     * @param array|Score[]       $scores
+     * @param Scores|Score[]      $scores
      * @param ComparatorInterface $comparator
      */
-    public function __construct(array $scores, ComparatorInterface $comparator)
+    public function __construct(Scores $scores, ComparatorInterface $comparator)
     {
         $this->scores = $scores;
         $this->comparator = $comparator;
     }
 
     /**
-     * @return array|Score[]
+     * @return Scores
      */
-    private function ranked(): array
+    private function ranked(): Scores
     {
         if (! isset($this->ranked)) {
-            $this->ranked = $this->scores;
-
-            usort($this->ranked, function (Score $a, Score $b) {
-                return $this->comparator->compare($a, $b);
-            });
+            $this->ranked = $this->scores->sorted($this->comparator);
         }
 
         return $this->ranked;
@@ -56,8 +52,8 @@ class Ranking
      */
     public function rankOf(Score $score): int
     {
-        if (false !== $key = array_search($score, $this->ranked(), true)) {
-            return $key + 1;
+        if (false !== $index = $this->ranked()->indexOf($score)) {
+            return $index + 1;
         }
 
         throw new UnexpectedValueException();
