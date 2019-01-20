@@ -36,7 +36,7 @@ class Ranking
     /**
      * @return array|Score[]
      */
-    private function compute(): array
+    private function ranked(): array
     {
         if (! isset($this->ranked)) {
             $this->ranked = $this->scores;
@@ -56,9 +56,7 @@ class Ranking
      */
     public function rankOf(Score $score): int
     {
-        $ranking = $this->compute();
-
-        if (false !== $key = array_search($score, $ranking, true)) {
+        if (false !== $key = array_search($score, $this->ranked(), true)) {
             return $key + 1;
         }
 
