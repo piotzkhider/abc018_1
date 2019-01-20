@@ -1,0 +1,8 @@
+{
+  "require-dev": {
+    "phpunit/phpunit": "^7.5"
+  },
+  "autoload": {
+    "Acme\\": "src/"
+  }
+}
