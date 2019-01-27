@@ -11,7 +11,7 @@ class DescendingComparatorTest extends TestCase
     /**
      * @dataProvider compareDataProvider
      */
-    public function testCompare(Score $a, Score $b, $expected)
+    public function testCompare(Score $a, Score $b, int $expected)
     {
         $SUT = new DescendingComparator();
 
