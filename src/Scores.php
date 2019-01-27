@@ -81,9 +81,7 @@ class Scores implements IteratorAggregate
      */
     private function copy(): Scores
     {
-        $values = $this->values;
-
-        return new self($values);
+        return new self($this->values);
     }
 
     /**
