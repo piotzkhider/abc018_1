@@ -2,7 +2,7 @@
 
 namespace Tests;
 
-use Acme\ComparatorInterface;
+use Acme\DescendingComparator;
 use Acme\Score;
 use Acme\Scores;
 use PHPUnit\Framework\TestCase;
@@ -50,36 +50,24 @@ class ScoresTest extends TestCase
     }
 
     /**
-     * @dataProvider dataProvider
+     * @dataProvider sortedDataProvider
      */
-    public function testSorted(array $values)
+    public function testSorted(array $values, array $expected)
     {
-        $sort = function (Score $a, Score $b) {
-            return $b->value() <=> $a->value();
-        };
-
-        $comparator = new class($sort) implements ComparatorInterface
-        {
-            private $sort;
-
-            public function __construct($sort)
-            {
-                $this->sort = $sort;
-            }
-
-            public function compare(Score $a, Score $b): int
-            {
-                return ($this->sort)($a, $b);
-            }
-        };
-
         $SUT = new Scores($values);
 
-        $result = $SUT->sorted($comparator);
+        $result = $SUT->sorted(new DescendingComparator());
 
-        usort($values, $sort);
+        $this->assertEquals($expected, $result->toArray());
+    }
 
-        $this->assertEquals($values, $result->toArray());
+    public function sortedDataProvider()
+    {
+        return [
+            '空' => [[], []],
+            '重複なし' => [[new Score(1), new Score(2), new Score(3)], [new Score(3), new Score(2), new Score(1)]],
+            '重複あり' => [[new Score(1), new Score(2), new Score(1)], [new Score(2), new Score(1), new Score(1)]],
+        ];
     }
 
     public function testToArray()
