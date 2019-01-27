@@ -41,9 +41,9 @@ class ScoresTest extends TestCase
     public function indexOfDataProvider()
     {
         return [
-            '存在するスコア' => [new Score(18), 1],
+            '存在するスコア'   => [new Score(18), 1],
             '存在しないスコア' => [new Score(10), false],
-            '重複するスコア' => [new Score(12), 0],
+            '重複するスコア'   => [new Score(12), 0],
         ];
     }
 
