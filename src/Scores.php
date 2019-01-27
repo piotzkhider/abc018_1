@@ -55,7 +55,13 @@ class Scores implements IteratorAggregate
      */
     public function indexOf(Score $score)
     {
-        return array_search($score, $this->values, true);
+        foreach ($this->values as $index => $value) {
+            if ($score->equals($value)) {
+                return $index;
+            }
+        }
+
+        return false;
     }
 
     /**

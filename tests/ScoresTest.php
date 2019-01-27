@@ -23,26 +23,28 @@ class ScoresTest extends TestCase
     }
 
     /**
-     * @dataProvider dataProvider
+     * @dataProvider indexOfDataProvider
      */
-    public function testIndexOf(array $values)
+    public function testIndexOf(Score $target, int $expected)
     {
-        $SUT = new Scores($values);
+        $SUT = new Scores([
+            new Score(12),
+            new Score(18),
+            new Score(12),
+        ]);
 
-        foreach ($values as $index => $value) {
-            $result = $SUT->indexOf($value);
+        $result = $SUT->indexOf($target);
 
-            $this->assertEquals($index, $result);
-        }
-
-        $this->assertTrue(true); // valuesがemptyのとき dit not perform any assertions にならないように
+        $this->assertEquals($expected, $result);
     }
 
-    public function testIndexOf_該当なし()
+    public function indexOfDataProvider()
     {
-        $SUT = new Scores();
-
-        $this->assertFalse($SUT->indexOf(new Score(1)));
+        return [
+            [new Score(18), 1],
+            [new Score(12), 0],
+            [new Score(10), false]
+        ];
     }
 
     /**
@@ -88,25 +90,5 @@ class ScoresTest extends TestCase
         $result = $SUT->toArray();
 
         $this->assertEquals($values, $result);
-    }
-
-    public function dataProvider()
-    {
-        return [
-            [[]],
-            [
-                [
-                    new Score(12),
-                    new Score(18),
-                    new Score(11),
-                ],
-            ],
-            [
-                [
-                    new Score(10),
-                    new Score(20),
-                ],
-            ],
-        ];
     }
 }

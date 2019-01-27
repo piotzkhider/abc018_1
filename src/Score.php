@@ -26,4 +26,14 @@ class Score
     {
         return $this->value;
     }
+
+    /**
+     * @param Score $other
+     *
+     * @return bool
+     */
+    public function equals(Score $other): bool
+    {
+        return $this->value === $other->value;
+    }
 }

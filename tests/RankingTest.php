@@ -8,51 +8,10 @@ use Acme\Score;
 use Acme\Scores;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use UnexpectedValueException;
 
 class RankingTest extends TestCase
 {
-    /**
-     * @dataProvider dataProvider
-     */
-    public function testRankOf(array $values)
-    {
-        $this->scores->method('sorted')
-            ->with($this->comparator)
-            ->willReturn(new Scores($values));
-
-        foreach ($values as $index => $value) {
-            $this->scores->method('indexOf')
-                ->with($value)
-                ->willReturn($index);
-
-            $result = $this->SUT->rankOf($value);
-
-            $this->assertEquals($index + 1, $result);
-        }
-
-        $this->assertTrue(true); // $valuesがemptyのとき dit not perform any assertions にならないように
-    }
-
-    public function dataProvider()
-    {
-        return [
-            [[]],
-            [
-                [
-                    new Score(12),
-                    new Score(18),
-                    new Score(11),
-                ],
-            ],
-            [
-                [
-                    new Score(10),
-                    new Score(20),
-                ],
-            ],
-        ];
-    }
-
     /**
      * @var Scores|MockObject
      */
@@ -67,6 +26,47 @@ class RankingTest extends TestCase
      * @var Ranking
      */
     private $SUT;
+
+    public function testRankOf()
+    {
+        $score = new Score(rand());
+
+        $sorted = $this->createMock(Scores::class);
+        $sorted->expects($this->once())
+            ->method('indexOf')
+            ->with($score)
+            ->willReturn(1);
+
+        $this->scores->expects($this->once())
+            ->method('sorted')
+            ->with($this->comparator)
+            ->willReturn($sorted);
+
+        $result = $this->SUT->rankOf($score);
+
+        $this->assertEquals(2, $result);
+    }
+
+    public function testRankOf_該当スコアなし()
+    {
+        $score = new Score(rand());
+
+        $sorted = $this->createMock(Scores::class);
+        $sorted->expects($this->once())
+            ->method('indexOf')
+            ->with($score)
+            ->willReturn(false);
+
+        $this->scores->expects($this->once())
+            ->method('sorted')
+            ->with($this->comparator)
+            ->willReturn($sorted);
+
+        $this->expectException(UnexpectedValueException::class);
+
+        $this->SUT->rankOf($score);
+    }
+
 
     protected function setUp()
     {
