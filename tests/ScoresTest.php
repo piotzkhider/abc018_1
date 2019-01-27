@@ -9,11 +9,13 @@ use PHPUnit\Framework\TestCase;
 
 class ScoresTest extends TestCase
 {
-    /**
-     * @dataProvider dataProvider
-     */
-    public function testAdd(array $values)
+    public function testAdd()
     {
+        $values = [
+            new Score(1),
+            new Score(2),
+        ];
+
         $SUT = new Scores();
         foreach ($values as $value) {
             $SUT->add($value);
@@ -80,11 +82,13 @@ class ScoresTest extends TestCase
         $this->assertEquals($values, $result->toArray());
     }
 
-    /**
-     * @dataProvider dataProvider
-     */
-    public function testToArray(array $values)
+    public function testToArray()
     {
+        $values = [
+            new Score(1),
+            new Score(2),
+        ];
+
         $SUT = new Scores($values);
 
         $result = $SUT->toArray();
