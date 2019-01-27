@@ -9,32 +9,23 @@ use PHPUnit\Framework\TestCase;
 class DescendingComparatorTest extends TestCase
 {
     /**
-     * @dataProvider dataProvider
+     * @dataProvider compareDataProvider
      */
-    public function testCompare(Score $a, Score $b)
+    public function testCompare(Score $a, Score $b, $expected)
     {
-        $sort = function (Score $a, Score $b) {
-            return $b->value() <=> $a->value();
-        };
-
         $SUT = new DescendingComparator();
 
         $result = $SUT->compare($a, $b);
 
-        $this->assertEquals($sort($a, $b), $result);
+        $this->assertEquals($expected ,$result);
     }
 
-    public function dataProvider()
+    public function compareDataProvider()
     {
         return [
-            [
-                new Score(12),
-                new Score(18),
-            ],
-            [
-                new Score(10),
-                new Score(20),
-            ],
+            '後者が大きい' => [new Score(12), new Score(18), 1],
+            '前者が大きい' => [new Score(20), new Score(10), -1],
+            '同じ' => [new Score(10), new Score(10), 0],
         ];
     }
 }
