@@ -29,7 +29,7 @@ class ScoresTest extends TestCase
     /**
      * @dataProvider indexOfDataProvider
      */
-    public function testIndexOf(Score $target, int $expected)
+    public function testIndexOf(Score $target, $expected)
     {
         $SUT = new Scores([
             new Score(12),
@@ -39,7 +39,7 @@ class ScoresTest extends TestCase
 
         $result = $SUT->indexOf($target);
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function indexOfDataProvider()
