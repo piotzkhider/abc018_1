@@ -5,6 +5,8 @@ namespace Tests;
 use Acme\DescendingComparator;
 use Acme\Score;
 use Acme\Scores;
+use ArrayIterator;
+use MultipleIterator;
 use PHPUnit\Framework\TestCase;
 
 class ScoresTest extends TestCase
@@ -58,7 +60,7 @@ class ScoresTest extends TestCase
 
         $result = $SUT->sorted(new DescendingComparator());
 
-        $this->assertEquals($expected, $result->toArray());
+        $this->assertArrayEquals($expected, $result->toArray());
     }
 
     public function sortedDataProvider()
@@ -81,6 +83,20 @@ class ScoresTest extends TestCase
 
         $result = $SUT->toArray();
 
-        $this->assertEquals($values, $result);
+        $this->assertArrayEquals($values, $result);
+    }
+
+    private function assertArrayEquals(array $expected, array $actual)
+    {
+        $multi = new MultipleIterator(MultipleIterator::MIT_NEED_ALL | MultipleIterator::MIT_KEYS_ASSOC);
+        $multi->attachIterator(new ArrayIterator($expected), 'expected');
+        $multi->attachIterator(new ArrayIterator($actual), 'actual');
+
+        foreach ($multi as $value) {
+            $this->assertTrue($value['actual']->equals($value['expected']));
+        }
+
+        // 空配列のとき did not perform any assertions にならないよう
+        $this->assertTrue(true);
     }
 }
